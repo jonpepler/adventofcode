@@ -5,7 +5,7 @@ func main() {
 }
 
 func calculateFuelRequirement(moduleMass int) int {
-	return 2
+	return (moduleMass / 3) - 2
 }
 
 func calculateFuelRequirements(moduleMasses []int) int {

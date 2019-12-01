@@ -2,14 +2,22 @@ package main
 
 import "testing"
 
+type TestData struct {
+	input          int
+	expectedResult int
+}
+
 func TestCalculateFuelRequirement(t *testing.T) {
-	result := calculateFuelRequirement(12)
-	if result != 2 {
-		t.Errorf("calculateFuelRequirement(12) failed. Expected %v, got %v", 2, result)
+	tests := []TestData{
+		{12, 2},
+		{14, 2},
+		{1969, 654},
 	}
 
-	result = calculateFuelRequirement(14)
-	if result != 2 {
-		t.Errorf("calculateFuelRequirement(14) failed. Expected %v, got %v", 2, result)
+	for _, test := range tests {
+		result := calculateFuelRequirement(test.input)
+		if result != test.expectedResult {
+			t.Errorf("calculateFuelRequirement(%v) failed. Expected %v, got %v", test.input, test.expectedResult, result)
+		}
 	}
 }
