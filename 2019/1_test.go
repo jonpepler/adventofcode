@@ -12,6 +12,7 @@ func TestCalculateFuelRequirement(t *testing.T) {
 		{12, 2},
 		{14, 2},
 		{1969, 654},
+		{100756, 33583},
 	}
 
 	for _, test := range tests {
