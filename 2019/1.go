@@ -27,15 +27,18 @@ func calculateFuelRequirements(moduleMasses []int) (acc int) {
 	return acc
 }
 
-func calculateTotalFuel(moduleMasses []int) (acc int) {
-	acc = calculateFuelRequirements(moduleMasses)
-	fuel := calculateFuelRequirement(acc)
+func calculateTotalFuel(moduleMasses []int) (total int) {
+	for _, moduleMass := range moduleMasses {
+		acc := calculateFuelRequirement(moduleMass)
+		fuel := calculateFuelRequirement(acc)
 
-	for fuel > 0 {
-		acc += fuel
-		fuel = calculateFuelRequirement(fuel)
+		for fuel > 0 {
+			acc += fuel
+			fuel = calculateFuelRequirement(fuel)
+		}
+
+		total += acc
 	}
-
 	return
 }
 
