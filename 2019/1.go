@@ -9,5 +9,9 @@ func calculateFuelRequirement(moduleMass int) int {
 }
 
 func calculateFuelRequirements(moduleMasses []int) int {
-	return 0
+	acc := 0
+	for _, value := range moduleMasses {
+		acc += calculateFuelRequirement(value)
+	}
+	return acc
 }
