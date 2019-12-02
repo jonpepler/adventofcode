@@ -17,9 +17,34 @@ func main() {
 	fmt.Println(out[0])
 }
 
-func processStrip(dataStrip []int) string {
-	fmt.Println(dataStrip)
-	return ""
+func processStrip(dataStrip []int) []int {
+	idx := 0
+	for cap(dataStrip) > idx {
+		op := dataStrip[idx]
+
+		switch op {
+		case 1:
+			op1 := dataStrip[idx+1]
+			op2 := dataStrip[idx+2]
+			pos := dataStrip[idx+3]
+			dataStrip[pos] = dataStrip[op1] + dataStrip[op2]
+			idx += 3
+		case 2:
+			op1 := dataStrip[idx+1]
+			op2 := dataStrip[idx+2]
+			pos := dataStrip[idx+3]
+			dataStrip[pos] = dataStrip[op1] * dataStrip[op2]
+			idx += 3
+		case 99:
+			idx = cap(dataStrip)
+		default:
+			fmt.Println(op)
+			panic("bad op")
+		}
+
+		idx++
+	}
+	return dataStrip
 }
 
 func readFileToNums(fname string) (nums []int, err error) {
