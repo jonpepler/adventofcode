@@ -8,13 +8,31 @@ import (
 )
 
 func main() {
+	data := getData()
+	target := 19690720
+	attempt := 0
+	p1 := -1
+	p2 := 0
+	for target != attempt {
+		p1++
+		if p1 == 100 {
+			p2++
+			p1 = 0
+		}
+		data = processStrip(newData(p1, p2))
+		attempt = data[0]
+	}
+
+	fmt.Printf("100 * %v + %v = %v\n", p1, p2, (100*p1 + p2))
+}
+
+func getData() []int {
 	data, err := readFileToNums("input/2.txt")
 	if err != nil {
 		panic(err)
 	}
 
-	out := processStrip(data)
-	fmt.Println(out[0])
+	return data
 }
 
 func processStrip(dataStrip []int) []int {
@@ -45,6 +63,13 @@ func processStrip(dataStrip []int) []int {
 		idx++
 	}
 	return dataStrip
+}
+
+func newData(p1 int, p2 int) []int {
+	data := getData()
+	data[1] = p1
+	data[2] = p2
+	return data
 }
 
 func readFileToNums(fname string) (nums []int, err error) {
