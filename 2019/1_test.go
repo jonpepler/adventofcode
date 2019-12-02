@@ -40,3 +40,18 @@ func TestCalculateFuelRequirements(t *testing.T) {
 		}
 	}
 }
+
+func TestCalculateTotalFuel(t *testing.T) {
+	tests := []MultipleTestData{
+		{[]int{14}, 2},
+		{[]int{1969}, 966},
+		{[]int{100756}, 50346},
+	}
+
+	for _, test := range tests {
+		result := calculateTotalFuel(test.input)
+		if result != test.expectedResult {
+			t.Errorf("calculateFuelRequirements(%v) failed. Expected %v, got %v", test.input, test.expectedResult, result)
+		}
+	}
+}

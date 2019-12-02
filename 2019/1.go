@@ -13,7 +13,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(calculateFuelRequirements(nums))
+	fmt.Println(calculateTotalFuel(nums))
 }
 
 func calculateFuelRequirement(moduleMass int) int {
@@ -25,6 +25,18 @@ func calculateFuelRequirements(moduleMasses []int) (acc int) {
 		acc += calculateFuelRequirement(value)
 	}
 	return acc
+}
+
+func calculateTotalFuel(moduleMasses []int) (acc int) {
+	acc = calculateFuelRequirements(moduleMasses)
+	fuel := calculateFuelRequirement(acc)
+
+	for fuel > 0 {
+		acc += fuel
+		fuel = calculateFuelRequirement(fuel)
+	}
+
+	return
 }
 
 func readFileToNums(fname string) (nums []int, err error) {
