@@ -12,8 +12,7 @@ func main() {
 }
 
 func neverDecreases(num int) bool {
-	s := strconv.Itoa(num)
-	runes := []rune(s)
+	runes := runeSlice(num)
 	sort.Slice(runes, func(i, j int) bool {
 		return runes[i] < runes[j]
 	})
@@ -22,5 +21,19 @@ func neverDecreases(num int) bool {
 }
 
 func hasTwoAdjacentNums(num int) bool {
+	runes := runeSlice(num)
+	previous := '-'
+
+	for _, r := range runes {
+		if r == previous {
+			return true
+		}
+		previous = r
+	}
+
 	return false
+}
+
+func runeSlice(num int) []rune {
+	return []rune(strconv.Itoa(num))
 }
