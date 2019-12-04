@@ -7,8 +7,17 @@ import (
 )
 
 func main() {
-	fmt.Println(neverDecreases(3345))
-	fmt.Println(neverDecreases(5443))
+	min := 240298
+	max := 784956
+	matches := 0
+
+	for i := min + 1; i < max; i++ {
+		if neverDecreases(i) && hasTwoAdjacentNums(i) {
+			fmt.Print(".")
+			matches++
+		}
+	}
+	fmt.Printf("\nMatches: %v", matches)
 }
 
 func neverDecreases(num int) bool {
