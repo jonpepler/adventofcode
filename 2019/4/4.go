@@ -31,13 +31,29 @@ func neverDecreases(num int) bool {
 
 func hasTwoAdjacentNums(num int) bool {
 	runes := runeSlice(num)
-	previous := '-'
+	idx := 0
 
-	for _, r := range runes {
-		if r == previous {
+	matchCount := 0
+	for idx < len(runes) {
+		if idx == 0 {
+			idx++
+			continue
+		}
+
+		if runes[idx] == runes[idx-1] {
+			matchCount++
+		} else {
+			if matchCount == 1 {
+				return true
+			}
+			matchCount = 0
+		}
+
+		if idx == len(runes)-1 && matchCount == 1 {
 			return true
 		}
-		previous = r
+
+		idx++
 	}
 
 	return false

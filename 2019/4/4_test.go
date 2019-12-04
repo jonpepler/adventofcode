@@ -29,6 +29,8 @@ func TestHasTwoAdjacentNums(t *testing.T) {
 		{3345, true},
 		{33445, true},
 		{3455, true},
+		{333455, true},
+		{33345, false},
 	}
 
 	for _, test := range tests {
