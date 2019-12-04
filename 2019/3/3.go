@@ -12,7 +12,9 @@ func main() {
 	data := getData()
 	matching := wire.GetMatchingCoords(data[0], data[1])
 	lowest := wire.LowestCoord(matching)
-	fmt.Println(wire.ManhattanDistanceTo0(lowest))
+	lowestCoordByWireDistance := wire.LowestCoordByDistance(matching)
+	fmt.Printf("Part 1: %v\n", wire.ManhattanDistanceTo0(lowest))
+	fmt.Printf("Part 2: %v\n", lowestCoordByWireDistance.WireDistance())
 }
 
 func getData() []wire.Wire {
