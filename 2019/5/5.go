@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	outputs, _ := processStrip(getData(), []int{1})
+	outputs, _ := processStrip(getData(), []int{5})
 
 	fmt.Println(outputs)
 }
@@ -75,6 +75,40 @@ func processStrip(dataStrip []int, input []int) ([]int, []int) {
 			adr := getParam(idx+1, positionModes[0], dataStrip)
 			outputs = append(outputs, adr)
 			idx += 2
+		case 5:
+			op1 := getParam(idx+1, positionModes[0], dataStrip)
+			if op1 != 0 {
+				idx = getParam(idx+2, positionModes[1], dataStrip)
+			} else {
+				idx += 3
+			}
+		case 6:
+			op1 := getParam(idx+1, positionModes[0], dataStrip)
+			if op1 == 0 {
+				idx = getParam(idx+2, positionModes[1], dataStrip)
+			} else {
+				idx += 3
+			}
+		case 7:
+			op1 := getParam(idx+1, positionModes[0], dataStrip)
+			op2 := getParam(idx+2, positionModes[1], dataStrip)
+			op3 := dataStrip[idx+3]
+			val := 0
+			if op1 < op2 {
+				val = 1
+			}
+			dataStrip[op3] = val
+			idx += 4
+		case 8:
+			op1 := getParam(idx+1, positionModes[0], dataStrip)
+			op2 := getParam(idx+2, positionModes[1], dataStrip)
+			op3 := dataStrip[idx+3]
+			val := 0
+			if op1 == op2 {
+				val = 1
+			}
+			dataStrip[op3] = val
+			idx += 4
 		case 99:
 			idx = cap(dataStrip)
 		default:
