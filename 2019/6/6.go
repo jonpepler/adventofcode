@@ -18,10 +18,13 @@ type spaceObject struct {
 }
 
 func main() {
-	com := *getData()
+	com, santa, you := getData()
 
 	// part 1
-	fmt.Println(com.countOrbits())
+	fmt.Printf("Total Orbits: %v\n", com.countOrbits())
+
+	// part 2
+	fmt.Printf("YOU -> SAN: %v\n", you.transfersTo(santa))
 }
 
 func (sObj spaceObject) countOrbits() (count int) {
@@ -38,7 +41,55 @@ func (sObj spaceObject) countOrbits() (count int) {
 	return
 }
 
-func getData() *spaceObject {
+func (sObj spaceObject) transfersTo(target spaceObject) (count int) {
+	// We want transfers to the same orbit, not transfers to orbit the target
+	sObj = *sObj.orbits
+	target = *target.orbits
+
+	sObjParents := sObj.orbitHierarchy()
+	targetParents := target.orbitHierarchy()
+
+	// Check if on same path
+	for i, ancestor := range sObjParents {
+		if ancestor.name == target.name {
+			return i
+		}
+	}
+	for i, ancestor := range targetParents {
+		if ancestor.name == sObj.name {
+			return i
+		}
+	}
+
+	// if not, find common object
+	for i, ancestor := range sObjParents {
+		// check if ancestor is on targetParents
+		for _, targetAncestor := range targetParents {
+			if ancestor.name == targetAncestor.name {
+				// common ancestor
+				return i + target.transfersTo(ancestor)
+			}
+		}
+	}
+
+	// no route??
+	return -1
+}
+
+func (sObj spaceObject) orbitHierarchy() (hierarchy []spaceObject) {
+	parentPointer := sObj
+	for parentPointer.orbits != nil {
+		hierarchy = append(hierarchy, parentPointer)
+		parentPointer = *parentPointer.orbits
+	}
+
+	// Add COM
+	hierarchy = append(hierarchy, parentPointer)
+
+	return
+}
+
+func getData() (spaceObject, spaceObject, spaceObject) {
 	data, err := readFileToObjects("input/6.txt")
 	if err != nil {
 		panic(err)
@@ -72,7 +123,9 @@ func getData() *spaceObject {
 		newOrbiter.orbits = newObj
 	}
 
-	return com
+	santa := *seenObjects["SAN"]
+	you := *seenObjects["YOU"]
+	return *com, santa, you
 }
 
 func readFileToObjects(fname string) ([]initialSpaceObject, error) {
