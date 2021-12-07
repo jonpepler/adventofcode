@@ -30,8 +30,6 @@ const getLeastFrequentBit = (column: Bits): 0 | 1 => {
 
 const getColumn = (bits: Bits[], column: number): Bits =>
   bits.map((v) => v[column])
-const invertBit = (bit: 0 | 1): 1 | 0 => (bit === 0 ? 1 : 0)
-const invertBinary = (bits: Bits): Bits => bits.map((b) => invertBit(b))
 
 const filterHighestFreqFirstBit = (bits: Bits[], index = 0): Bits => {
   if (bits.length === 1) return bits[0]
