@@ -1,0 +1,1 @@
+export {fileToString} from './fileToString';

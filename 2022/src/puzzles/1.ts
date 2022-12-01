@@ -1,20 +1,30 @@
-import {readFileSync} from 'fs';
-import path from 'path';
+import { readFileSync } from 'fs'
+import path from 'path'
 
-export const countCalories = (input: string) =>
-  Math.max(
-    ...input.split('\n\n').map(elf =>
-      elf
-        .split('\n')
-        .map(calories => Number(calories))
-        .reduce((total, calories) => total + calories),
-    ),
-  );
+const totalCalories = (total: number, calories: number) => total + calories
+
+const processTotalsFromInput = (input: string): number[] =>
+  input.split('\n\n').map((elf) =>
+    elf
+      .split('\n')
+      .map((calories) => Number(calories))
+      .reduce(totalCalories)
+  )
+
+export const topCalories = (input: string) =>
+  Math.max(...processTotalsFromInput(input))
+
+export const top3Calories = (input: string) => {
+  return processTotalsFromInput(input)
+    .sort((a, b) => b - a)
+    .slice(0, 3)
+    .reduce(totalCalories)
+}
 
 export const solution = () => {
   const input = readFileSync(
-    path.resolve(__dirname, '../input/1.txt'),
-  ).toString();
+    path.resolve(__dirname, '../input/1.txt')
+  ).toString()
 
-  return countCalories(input);
-};
+  return top3Calories(input)
+}
