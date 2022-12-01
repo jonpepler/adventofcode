@@ -1,0 +1,38 @@
+{
+  "name": "template-ts-node-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "jest",
+    "lint": "eslint . --ext js,ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@personal.github.com:jonpepler/template-ts-node-starter.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.1",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "babel-jest": "^27.0.2",
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^27.0.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.3.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
