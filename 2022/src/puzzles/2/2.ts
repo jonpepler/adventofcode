@@ -55,7 +55,7 @@ const processInput = (input: string): Game[] =>
       player: playerMap[player],
     }))
 
-const processSrategyInput = (input: string): GameGuide[] =>
+const processStrategyInput = (input: string): GameGuide[] =>
   input
     .split('\n')
     .map((game) => game.split(' ') as ['A' | 'B' | 'C', 'X' | 'Y' | 'Z'])
@@ -109,4 +109,4 @@ export const calculateScore = (input: string) =>
   processInput(input).map(resolveGame).reduce(sum)
 
 export const strategise = (input: string) =>
-  processSrategyInput(input).map(chooseHand).map(resolveGame).reduce(sum)
+  processStrategyInput(input).map(chooseHand).map(resolveGame).reduce(sum)
