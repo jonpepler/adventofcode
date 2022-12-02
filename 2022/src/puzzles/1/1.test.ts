@@ -1,4 +1,4 @@
-import { fileToString } from '../util'
+import { fileToString } from '../../util'
 import { top3Calories, topCalories } from './1'
 
 it('outputs 24000 for the part 1 test input', () => {

@@ -1,4 +1,4 @@
-import { fileToString } from '../util'
+import { fileToString } from '../../util'
 import { calculateScore, Hands, resolveGame } from './2'
 
 it('returns 15 for part 1 test input', () => {

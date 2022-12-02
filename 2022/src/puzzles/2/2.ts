@@ -1,4 +1,4 @@
-import { fileToString, sum } from '../util'
+import { sum } from '../../util'
 
 export enum Hands {
   Rock,
@@ -110,5 +110,3 @@ export const calculateScore = (input: string) =>
 
 export const strategise = (input: string) =>
   processSrategyInput(input).map(chooseHand).map(resolveGame).reduce(sum)
-
-export const solution = () => strategise(fileToString('2'))
