@@ -23,7 +23,7 @@ export const top3Calories = (input: string) => {
 
 export const solution = () => {
   const input = readFileSync(
-    path.resolve(__dirname, '../input/1.txt')
+    path.resolve(__dirname, '1')
   ).toString()
 
   return top3Calories(input)

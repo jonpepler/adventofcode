@@ -19,5 +19,6 @@ module.exports = {
         semi: false,
       },
     ],
+    'arrow-body-style': ['error', 'as-needed'],
   },
 }

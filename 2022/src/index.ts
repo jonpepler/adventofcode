@@ -1,3 +1,3 @@
-import { solution } from "./puzzles/1";
+import { solution } from './puzzles/2'
 
-console.log(solution());
+console.log(solution())
