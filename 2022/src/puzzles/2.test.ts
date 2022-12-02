@@ -5,6 +5,10 @@ it('returns 15 for part 1 test input', () => {
   expect(calculateScore(fileToString('2.test'))).toEqual(15)
 })
 
+it('returns 12 for the part 2 test input', () => {
+  expect
+})
+
 describe('Game Resolve', () => {
   test('Paper beats rock', () => {
     expect(resolveGame({ opponent: Hands.Rock, player: Hands.Paper })).toEqual(

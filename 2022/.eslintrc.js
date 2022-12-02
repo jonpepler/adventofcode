@@ -20,5 +20,7 @@ module.exports = {
       },
     ],
     'arrow-body-style': ['error', 'as-needed'],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
   },
 }
