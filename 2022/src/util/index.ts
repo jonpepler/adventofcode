@@ -1,3 +1,3 @@
 export { fileToString } from './fileToString'
-export { sum } from './sum'
+export { sum, sumTrue } from './reduceFunctions'
 export { printSolution } from './printSolution'
