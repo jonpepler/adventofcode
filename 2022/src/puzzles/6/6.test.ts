@@ -1,19 +1,47 @@
-import { charsToStart } from './6'
+import { findStartOfPacketIndex, findStartOfMessageIndex } from './6'
 
 describe('it finds start-of-packet markers in', () => {
   it('mjqjpqmgbljsphdztnvjfqwrcgsmlb', () => {
-    expect(charsToStart('mjqjpqmgbljsphdztnvjfqwrcgsmlb')).toEqual(7)
+    expect(findStartOfPacketIndex('mjqjpqmgbljsphdztnvjfqwrcgsmlb')).toEqual(7)
   })
   it('bvwbjplbgvbhsrlpgdmjqwftvncz', () => {
-    expect(charsToStart('bvwbjplbgvbhsrlpgdmjqwftvncz')).toEqual(5)
+    expect(findStartOfPacketIndex('bvwbjplbgvbhsrlpgdmjqwftvncz')).toEqual(5)
   })
   it('nppdvjthqldpwncqszvftbrmjlhg', () => {
-    expect(charsToStart('nppdvjthqldpwncqszvftbrmjlhg')).toEqual(6)
+    expect(findStartOfPacketIndex('nppdvjthqldpwncqszvftbrmjlhg')).toEqual(6)
   })
   it('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', () => {
-    expect(charsToStart('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg')).toEqual(10)
+    expect(findStartOfPacketIndex('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg')).toEqual(
+      10
+    )
   })
   it('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw', () => {
-    expect(charsToStart('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw')).toEqual(11)
+    expect(findStartOfPacketIndex('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw')).toEqual(
+      11
+    )
+  })
+})
+
+describe('it finds start-of-message markers in', () => {
+  it('mjqjpqmgbljsphdztnvjfqwrcgsmlb', () => {
+    expect(findStartOfMessageIndex('mjqjpqmgbljsphdztnvjfqwrcgsmlb')).toEqual(
+      19
+    )
+  })
+  it('bvwbjplbgvbhsrlpgdmjqwftvncz', () => {
+    expect(findStartOfMessageIndex('bvwbjplbgvbhsrlpgdmjqwftvncz')).toEqual(23)
+  })
+  it('nppdvjthqldpwncqszvftbrmjlhg', () => {
+    expect(findStartOfMessageIndex('nppdvjthqldpwncqszvftbrmjlhg')).toEqual(23)
+  })
+  it('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg', () => {
+    expect(
+      findStartOfMessageIndex('nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg')
+    ).toEqual(29)
+  })
+  it('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw', () => {
+    expect(findStartOfMessageIndex('zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw')).toEqual(
+      26
+    )
   })
 })

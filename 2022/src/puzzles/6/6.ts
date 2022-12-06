@@ -1,30 +1,30 @@
-const datastream = function* (input: string) {
-  let index = 0
+const datastream = function* (input: string, blocksize: number) {
+  let index = -1
   const stream = input
 
   while (stream.length - 1 >= index) {
-    if (stream[index + 3] === undefined) yield undefined
-    else
-      yield [
-        stream[index],
-        stream[index + 1],
-        stream[index + 2],
-        stream[index + 3],
-      ]
-
     index++
+    if (stream[index + blocksize - 1] === undefined) yield undefined
+    else
+      yield Array.from({ length: blocksize }).map((_, i) => stream[index + i])
   }
 }
 
-export const charsToStart = (input: string): number => {
-  const stream = datastream(input)
+const findUniqueBlockIndex = (input: string, blocksize: number): number => {
+  const stream = datastream(input, blocksize)
   let index = 0
   for (const block of stream) {
     index++
     const set = new Set(block)
-    if (set.size === 4) return index + 3
+    if (set.size === blocksize) return index + blocksize - 1
   }
   throw new Error(
     'Subroutine reached index ' + index + ' without seeing a unique block!'
   )
 }
+
+export const findStartOfPacketIndex = (input: string): number =>
+  findUniqueBlockIndex(input, 4)
+
+export const findStartOfMessageIndex = (input: string): number =>
+  findUniqueBlockIndex(input, 14)
