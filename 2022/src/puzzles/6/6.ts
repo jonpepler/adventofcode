@@ -1,6 +1,5 @@
-const datastream = function* (input: string, blocksize: number) {
+const datastream = function* (stream: string, blocksize: number) {
   let index = -1
-  const stream = input
 
   while (stream.length - 1 >= index) {
     index++
