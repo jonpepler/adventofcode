@@ -94,7 +94,6 @@ const addTotalSize = (node: Directory): Required<Directory> => {
   return guarenteeTotalSize(node)
 }
 
-const sizeLimit = 100000
 const guarenteeTotalSize = (node: Directory): Required<Directory> => {
   if (node.totalSize === undefined)
     throw new Error('Missing total size! ' + node.name)
@@ -102,13 +101,15 @@ const guarenteeTotalSize = (node: Directory): Required<Directory> => {
     return node as Required<Directory>
   }
 }
+interface SizeReport {
+  size: number
+  name: string
+}
 const findValidSizes = (
   node: Required<Directory>,
-  sizes: number[] = []
-): number[] => {
-  if (node.totalSize <= sizeLimit) {
-    sizes.push(node.totalSize)
-  }
+  sizes: SizeReport[] = []
+): SizeReport[] => {
+  sizes.push({ size: node.totalSize, name: node.name })
 
   node.contents.forEach((n) => {
     if (!isFile(n)) {
@@ -120,4 +121,19 @@ const findValidSizes = (
 }
 
 export const getDirectorySizes = (input: string) =>
-  findValidSizes(addTotalSize(processInput(input))).reduce(sum)
+  findValidSizes(addTotalSize(processInput(input)))
+    .map((sr) => sr.size)
+    .filter((size) => size < 100000)
+    .reduce(sum)
+
+const totalDiskSpace = 70000000
+const targetSpace = 30000000
+export const getDeletableDirectory = (input: string) => {
+  const root = addTotalSize(processInput(input))
+  const sizes = findValidSizes(root)
+  const availableSpace = totalDiskSpace - root.totalSize
+  const requiredSpace = targetSpace - availableSpace
+  return sizes
+    .filter(({ size }) => size >= requiredSpace)
+    .sort(({ size: a }, { size: b }) => a - b)[0]
+}
