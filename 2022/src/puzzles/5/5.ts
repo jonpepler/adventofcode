@@ -1,4 +1,4 @@
-import { concatStringArray, printSolution } from '../../util'
+import { concatStringArray } from '../../util'
 
 type Crate = string
 type CrateRack = Crate[]

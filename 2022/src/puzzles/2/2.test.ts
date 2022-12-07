@@ -1,12 +1,8 @@
-import { fileToString } from '../../util'
+import { getInput } from '../../util'
 import { calculateScore, Hands, resolveGame } from './2'
 
-it('returns 15 for part 1 test input', () => {
-  expect(calculateScore(fileToString('2.test'))).toEqual(15)
-})
-
-it('returns 12 for the part 2 test input', () => {
-  expect
+it('returns 15 for part 1 test input', async () => {
+  expect(calculateScore(await getInput(2, true))).toEqual(15)
 })
 
 describe('Game Resolve', () => {

@@ -1,5 +1,6 @@
-import { fileToString, printSolution } from '../../util'
-import { charsToStart, findStartOfMessageIndex } from './6'
+import { getInput, printSolution } from '../../util'
+import { findStartOfPacketIndex, findStartOfMessageIndex } from './6'
 
-const input = fileToString('6')
-printSolution(charsToStart(input), findStartOfMessageIndex(input))
+getInput(6).then((input) =>
+  printSolution(findStartOfPacketIndex(input), findStartOfMessageIndex(input))
+)

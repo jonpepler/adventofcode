@@ -1,8 +1,9 @@
-import { fileToString, printSolution } from '../../util'
+import { getInput, printSolution } from '../../util'
 import { countAllOverlappingSections, countOverlappingSections } from './4'
 
-const input = fileToString('4')
-printSolution(
-  countOverlappingSections(input),
-  countAllOverlappingSections(input)
+getInput(4).then((input) =>
+  printSolution(
+    countOverlappingSections(input),
+    countAllOverlappingSections(input)
+  )
 )

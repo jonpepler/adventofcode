@@ -1,8 +1,8 @@
-import { fileToString } from '../../util'
+import { getInput } from '../../util'
 import { getBadgeGroups, getItemPriorities, halveBags, prioritise } from './3'
 
-it('returns 157 for part 1 puzzle input', () => {
-  const input = fileToString('3.test')
+it('returns 157 for part 1 puzzle input', async () => {
+  const input = await getInput(3, true)
   const output = getItemPriorities(input)
   expect(output).toEqual(157)
 })
@@ -28,8 +28,8 @@ it('gets the correct prioritisation for each letter', () => {
   expect(prioritise('Z')).toEqual(52)
 })
 
-it('returns 70 for part 2 puzzle input', () => {
-  const input = fileToString('3.test')
+it('returns 70 for part 2 puzzle input', async () => {
+  const input = await getInput(3, true)
   const output = getBadgeGroups(input)
   expect(output).toEqual(70)
 })
