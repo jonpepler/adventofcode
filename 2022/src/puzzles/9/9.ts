@@ -113,46 +113,39 @@ class Grid {
   }
 
   checkTail(knotIndex: number): Instruction['direction'][] | undefined {
-    if (
-      this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] > 1 &&
-      this.knots[knotIndex - 1][1] !== this.knots[knotIndex][1]
-    )
-      return [
-        'R',
-        this.knots[knotIndex - 1][1] > this.knots[knotIndex][1] ? 'U' : 'D',
-      ]
-    if (
-      this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] < -1 &&
-      this.knots[knotIndex - 1][1] !== this.knots[knotIndex][1]
-    )
-      return [
-        'L',
-        this.knots[knotIndex - 1][1] > this.knots[knotIndex][1] ? 'U' : 'D',
-      ]
-    if (
-      this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] > 1 &&
-      this.knots[knotIndex - 1][0] !== this.knots[knotIndex][0]
-    )
-      return [
-        'U',
-        this.knots[knotIndex - 1][0] > this.knots[knotIndex][0] ? 'R' : 'L',
-      ]
-    if (
-      this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] < -1 &&
-      this.knots[knotIndex - 1][0] !== this.knots[knotIndex][0]
-    )
-      return [
-        'D',
-        this.knots[knotIndex - 1][0] > this.knots[knotIndex][0] ? 'R' : 'L',
-      ]
-    if (this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] > 1)
-      return ['R']
-    if (this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] < -1)
-      return ['L']
-    if (this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] > 1)
-      return ['U']
-    if (this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] < -1)
-      return ['D']
+    const leadingKnot = this.knots[knotIndex - 1]
+    const movingKnot = this.knots[knotIndex]
+    const xDiff = leadingKnot[0] - movingKnot[0]
+    const yDiff = leadingKnot[1] - movingKnot[1]
+    const movingKnotFarLeft = xDiff > 1
+    const movingKnotFarRight = xDiff < -1
+    const movingKnotFarDown = yDiff > 1
+    const movingKnotFarUp = yDiff < -1
+    const knotsInDifferentColumns = leadingKnot[1] !== movingKnot[1]
+    const knotsInDifferentRows = leadingKnot[0] !== movingKnot[0]
+    const movingKnotBelow = leadingKnot[1] > movingKnot[1]
+    const movingKnotBehind = leadingKnot[0] > movingKnot[0]
+
+    if (movingKnotFarLeft) {
+      return knotsInDifferentColumns
+        ? ['R', movingKnotBelow ? 'U' : 'D']
+        : ['R']
+    }
+
+    if (movingKnotFarRight) {
+      return knotsInDifferentColumns
+        ? ['L', movingKnotBelow ? 'U' : 'D']
+        : ['L']
+    }
+
+    if (movingKnotFarDown) {
+      return knotsInDifferentRows ? ['U', movingKnotBehind ? 'R' : 'L'] : ['U']
+    }
+
+    if (movingKnotFarUp) {
+      return knotsInDifferentRows ? ['D', movingKnotBehind ? 'R' : 'L'] : ['D']
+    }
+
     return undefined
   }
 
