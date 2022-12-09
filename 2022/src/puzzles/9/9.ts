@@ -43,30 +43,46 @@ class Grid {
   grid: GridItem[][]
   headLoc: Location = [0, 0]
   tailLoc: Location = [0, 0]
+  knots: Location[] = []
   tailVisitGrid: boolean[][]
   tailVisits = 1
 
-  constructor() {
+  constructor(knots = 0) {
     this.grid = [[GridItem.HeadAndTail]]
     this.tailVisitGrid = [[true]]
+    this.knots = [
+      this.headLoc,
+      ...Array.from({ length: knots }).map(() => [0, 0] as Location),
+      this.tailLoc,
+    ]
+  }
+
+  getHeadLoc() {
+    return this.knots[0]
+  }
+
+  getTailLoc() {
+    return this.knots[this.knots.length - 1]
   }
 
   at(x: number, y: number) {
     return this.grid[y][x]
   }
 
-  set(value: GridItem, x: number, y: number) {
+  set(value: GridItem, x: number, y: number, tailIndex?: number) {
     if (this.grid[y] === undefined) this.grid[y] = []
     this.grid[y][x] = value
-    if (value === GridItem.Head) this.headLoc = [x, y]
-    if (value === GridItem.Tail) {
-      this.tailLoc = [x, y]
-      if (this.tailVisitGrid[y] === undefined) {
-        this.tailVisitGrid[y] = []
-      }
-      if (this.tailVisitGrid[y][x] === undefined) {
-        this.tailVisits++
-        this.tailVisitGrid[y][x] = true
+    if (value === GridItem.Head) this.knots[0] = [x, y]
+    if (value === GridItem.Tail && tailIndex !== undefined) {
+      this.knots[tailIndex] = [x, y]
+      if (tailIndex === this.knots.length - 1) {
+        if (this.tailVisitGrid[y] === undefined) {
+          this.tailVisitGrid[y] = []
+        }
+        if (this.tailVisitGrid[y][x] === undefined) {
+          this.tailVisits++
+          this.tailVisitGrid[y][x] = true
+        }
       }
     }
   }
@@ -75,50 +91,68 @@ class Grid {
     if (obj === GridItem.Empty) return
 
     if (obj === GridItem.Head) {
-      if (this.at(...this.headLoc) === GridItem.HeadAndTail)
-        this.set(GridItem.Tail, ...this.headLoc)
-      else this.set(GridItem.Empty, ...this.headLoc)
-      const newX = this.headLoc[0] + x
-      const newY = this.headLoc[1] + y
+      if (this.at(...this.getHeadLoc()) === GridItem.HeadAndTail)
+        this.set(GridItem.Tail, ...this.getHeadLoc())
+      else this.set(GridItem.Empty, ...this.getHeadLoc())
+      const newX = this.getHeadLoc()[0] + x
+      const newY = this.getHeadLoc()[1] + y
       this.set(GridItem.Head, newX, newY)
-
-      const [tailX, tailY] = convertDirectionToCoords(this.checkTail())
-      this.move(GridItem.Tail, tailX, tailY)
-    }
-
-    if (obj === GridItem.Tail) {
-      this.set(GridItem.Empty, ...this.tailLoc)
-      const newX = this.tailLoc[0] + x
-      const newY = this.tailLoc[1] + y
-      this.set(GridItem.Tail, newX, newY)
+      this.moveTail()
     }
   }
 
-  checkTail(): Instruction['direction'][] | undefined {
+  moveTail() {
+    Array.from({ length: this.knots.length - 1 }).forEach((_, index) => {
+      const tailtalk = this.checkTail(index + 1)
+      const [tailX, tailY] = convertDirectionToCoords(tailtalk)
+      this.set(GridItem.Empty, ...this.knots[index + 1])
+      const newX = this.knots[index + 1][0] + tailX
+      const newY = this.knots[index + 1][1] + tailY
+      this.set(GridItem.Tail, newX, newY, index + 1)
+    })
+  }
+
+  checkTail(knotIndex: number): Instruction['direction'][] | undefined {
     if (
-      this.headLoc[0] - this.tailLoc[0] > 1 &&
-      this.headLoc[1] !== this.tailLoc[1]
+      this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] > 1 &&
+      this.knots[knotIndex - 1][1] !== this.knots[knotIndex][1]
     )
-      return ['R', this.headLoc[1] > this.tailLoc[1] ? 'U' : 'D']
+      return [
+        'R',
+        this.knots[knotIndex - 1][1] > this.knots[knotIndex][1] ? 'U' : 'D',
+      ]
     if (
-      this.headLoc[0] - this.tailLoc[0] < -1 &&
-      this.headLoc[1] !== this.tailLoc[1]
+      this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] < -1 &&
+      this.knots[knotIndex - 1][1] !== this.knots[knotIndex][1]
     )
-      return ['L', this.headLoc[1] > this.tailLoc[1] ? 'U' : 'D']
+      return [
+        'L',
+        this.knots[knotIndex - 1][1] > this.knots[knotIndex][1] ? 'U' : 'D',
+      ]
     if (
-      this.headLoc[1] - this.tailLoc[1] > 1 &&
-      this.headLoc[0] !== this.tailLoc[0]
+      this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] > 1 &&
+      this.knots[knotIndex - 1][0] !== this.knots[knotIndex][0]
     )
-      return ['U', this.headLoc[0] > this.tailLoc[0] ? 'R' : 'L']
+      return [
+        'U',
+        this.knots[knotIndex - 1][0] > this.knots[knotIndex][0] ? 'R' : 'L',
+      ]
     if (
-      this.headLoc[1] - this.tailLoc[1] < -1 &&
-      this.headLoc[0] !== this.tailLoc[0]
+      this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] < -1 &&
+      this.knots[knotIndex - 1][0] !== this.knots[knotIndex][0]
     )
-      return ['D', this.headLoc[0] > this.tailLoc[0] ? 'R' : 'L']
-    if (this.headLoc[0] - this.tailLoc[0] > 1) return ['R']
-    if (this.headLoc[0] - this.tailLoc[0] < -1) return ['L']
-    if (this.headLoc[1] - this.tailLoc[1] > 1) return ['U']
-    if (this.headLoc[1] - this.tailLoc[1] < -1) return ['D']
+      return [
+        'D',
+        this.knots[knotIndex - 1][0] > this.knots[knotIndex][0] ? 'R' : 'L',
+      ]
+    if (this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] > 1)
+      return ['R']
+    if (this.knots[knotIndex - 1][0] - this.knots[knotIndex][0] < -1)
+      return ['L']
+    if (this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] > 1)
+      return ['U']
+    if (this.knots[knotIndex - 1][1] - this.knots[knotIndex][1] < -1)
+      return ['D']
     return undefined
   }
 
@@ -156,6 +190,18 @@ const processInput = (input: string): Instructions =>
 export const countTailPositions = (input: string): number => {
   const instructions = processInput(input)
   const grid = new Grid()
+  instructions.forEach(({ direction, distance }) => {
+    const [x, y] = convertDirectionToCoords([direction])
+    Array.from({ length: distance }).forEach(() => {
+      grid.move(GridItem.Head, x, y)
+    })
+  })
+  return grid.tailVisits
+}
+
+export const countLongTailPositions = (input: string): number => {
+  const instructions = processInput(input)
+  const grid = new Grid(8)
   instructions.forEach(({ direction, distance }) => {
     const [x, y] = convertDirectionToCoords([direction])
     Array.from({ length: distance }).forEach(() => {

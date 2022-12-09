@@ -1,4 +1,6 @@
 import { getInput, printSolution } from '../../util'
-import { countTailPositions } from './9'
+import { countLongTailPositions, countTailPositions } from './9'
 
-getInput(9).then((input) => printSolution(countTailPositions(input), undefined))
+getInput(9).then((input) =>
+  printSolution(countTailPositions(input), countLongTailPositions(input))
+)
