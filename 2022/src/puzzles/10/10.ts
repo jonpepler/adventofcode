@@ -2,13 +2,13 @@ import { sum } from '../../util'
 
 type Noop = 'noop'
 type Addx = `addx ${number}`
-type Instruction = Noop | Addx
+export type Instruction = Noop | Addx
 
-const processInput = (input: string): Instruction[] =>
+export const processInput = (input: string): Instruction[] =>
   input.split('\n').reverse() as Instruction[]
 
 type Pixel = 'light' | 'dark'
-class Crt {
+export class Crt {
   screen: Pixel[]
 
   constructor() {
@@ -38,7 +38,7 @@ class Crt {
   }
 }
 
-class Register {
+export class Register {
   name: string
   value: number
   signalLog: number[]
