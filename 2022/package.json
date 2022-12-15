@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "test": "jest",
-    "lint": "eslint . --ext js,ts"
+    "lint": "eslint . --ext js,ts",
+    "init": "./scripts/makePuzzleFolder.sh"
   },
   "repository": {
     "type": "git",
