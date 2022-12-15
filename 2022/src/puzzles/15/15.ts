@@ -1,3 +1,5 @@
+import { sum } from '../../util'
+
 class Point {
   constructor(public x: number, public y: number) {}
 
@@ -7,6 +9,59 @@ class Point {
 
   distanceTo(point: Point): number {
     return Math.abs(point.x - this.x) + Math.abs(point.y - this.y)
+  }
+}
+
+class Range {
+  constructor(public x1: number, public x2: number) {}
+  getLength(): number {
+    return Math.abs(this.x2 - this.x1)
+  }
+}
+class RangeList {
+  public ranges: Range[]
+  constructor() {
+    this.ranges = []
+  }
+
+  consolidateOn(index: number) {
+    const toConsolidate = this.ranges.filter((_, i) => i !== index)
+    const consolidator = this.ranges[index]
+    this.ranges = [consolidator]
+    toConsolidate.forEach((range) => this.addRange(range))
+  }
+
+  addRange(range: Range) {
+    let rangeAdded = false
+    for (let i = 0; i < this.ranges.length; i++) {
+      const x1Fits =
+        range.x1 >= this.ranges[i].x1 && this.ranges[i].x2 >= range.x1
+      const x2Fits =
+        range.x2 >= this.ranges[i].x1 && this.ranges[i].x2 >= range.x2
+      if (x1Fits && x2Fits) {
+        rangeAdded = true
+      }
+      if (x1Fits && !x2Fits) {
+        rangeAdded = true
+        this.ranges[i].x2 = range.x2
+      }
+      if (!x1Fits && x2Fits) {
+        rangeAdded = true
+        this.ranges[i].x1 = range.x1
+      }
+      const isSuperRange =
+        range.x1 < this.ranges[i].x1 && range.x2 > this.ranges[i].x2
+      if (isSuperRange) {
+        rangeAdded = true
+        this.ranges[i].x1 = range.x1
+        this.ranges[i].x2 = range.x2
+      }
+      if (rangeAdded) {
+        this.consolidateOn(i)
+        break
+      }
+    }
+    if (!rangeAdded) this.ranges.push(range)
   }
 }
 
@@ -69,31 +124,19 @@ const processInput = (input: string): CaveReading =>
 
 export const countImpossibleBeaconLocations = (input: string, y: number) => {
   const { sensors } = processInput(input)
-  const testLine: boolean[] = []
-  let offset = 0
   const validSensors = sensors.filter(
     ({ point, range }) => !(point.y + range < y || point.y - range > y)
   )
   console.log(
     `${sensors.length} sensors. ${validSensors.length} sensors viable. `
   )
+  const ranges = new RangeList()
   validSensors.forEach(({ point, range }) => {
     process.stdin.write('.')
     const triangleNumber = (n: number) => Math.abs(n) * 2 + 1
     const overlap = triangleNumber(range - Math.abs(point.y - y))
     const sideFill = (overlap - 1) / 2
-    testLine[point.x] = true
-    for (let i = 1; i <= sideFill; i++) {
-      if (point.x - i < 0) {
-        offset++
-        testLine.unshift(true)
-        testLine[offset + point.x + i] = true
-      } else {
-        testLine[offset + point.x + i] = true
-        testLine[offset + point.x - i] = true
-      }
-    }
+    ranges.addRange(new Range(point.x - sideFill, point.x + sideFill))
   })
-  process.stdin.write('\n')
-  return testLine.filter((v) => v).length
+  return ranges.ranges.map((range) => range.getLength()).reduce(sum)
 }
