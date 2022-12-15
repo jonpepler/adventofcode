@@ -17,6 +17,11 @@ class Range {
   getLength(): number {
     return Math.abs(this.x2 - this.x1)
   }
+
+  // only for very specific case of finding single point between 2 ranges
+  pointBetween(range: Range) {
+    return (range.x2 < this.x2 ? range.x2 : this.x2) + 1
+  }
 }
 class RangeList {
   public ranges: Range[]
@@ -34,6 +39,8 @@ class RangeList {
   addRange(range: Range) {
     let rangeAdded = false
     for (let i = 0; i < this.ranges.length; i++) {
+      const x1NextTo = range.x1 - 1 === this.ranges[i].x2
+      const x2NextTo = range.x2 + 1 === this.ranges[i].x1
       const x1Fits =
         range.x1 >= this.ranges[i].x1 && this.ranges[i].x2 >= range.x1
       const x2Fits =
@@ -41,11 +48,11 @@ class RangeList {
       if (x1Fits && x2Fits) {
         rangeAdded = true
       }
-      if (x1Fits && !x2Fits) {
+      if ((x1Fits || x1NextTo) && !x2Fits) {
         rangeAdded = true
         this.ranges[i].x2 = range.x2
       }
-      if (!x1Fits && x2Fits) {
+      if (!x1Fits && (x2Fits || x2NextTo)) {
         rangeAdded = true
         this.ranges[i].x1 = range.x1
       }
@@ -138,5 +145,33 @@ export const countImpossibleBeaconLocations = (input: string, y: number) => {
     const sideFill = (overlap - 1) / 2
     ranges.addRange(new Range(point.x - sideFill, point.x + sideFill))
   })
-  return ranges.ranges.map((range) => range.getLength()).reduce(sum)
+  const count = ranges.ranges.map((range) => range.getLength()).reduce(sum)
+  process.stdin.write(`${count}\n`)
+  return count
+}
+
+export const findBeaconTuningFrequency = (input: string, maxPos: number) => {
+  const { sensors } = processInput(input)
+  let [x, y] = [0, 0]
+  for (let i = 0; i < maxPos; i++) {
+    const rangeList = new RangeList()
+    sensors
+      .filter(
+        ({ point, range }) => !(point.y + range < i || point.y - range > i)
+      )
+      .forEach(({ point, range }) => {
+        const triangleNumber = (n: number) => Math.abs(n) * 2 + 1
+        const overlap = triangleNumber(range - Math.abs(point.y - i))
+        const sideFill = (overlap - 1) / 2
+        rangeList.addRange(new Range(point.x - sideFill, point.x + sideFill))
+      })
+    if (rangeList.ranges.length > 1) {
+      y = i
+      x = rangeList.ranges[0].pointBetween(rangeList.ranges[1])
+      break
+    }
+  }
+  const count = x * 4000000 + y
+  process.stdin.write(`${count}\n`)
+  return count
 }
